@@ -1,0 +1,7 @@
+sftp-config.json
+*.sublime-project
+*.sublime-workspace
+.sftpConfig.json
+lib/
+node_modules/
+.vscode/

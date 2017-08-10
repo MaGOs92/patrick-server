@@ -14,7 +14,7 @@ export default class StreamManager {
   readStream;
 
   constructor(public ws, public options) {
-
+    console.log('Creating stream manager');
     this.ws.send(JSON.stringify({
       action: 'init',
       width: this.options.width,

@@ -16,6 +16,7 @@
     "pi-blaster.js": "^0.1.1",
     "raspicam": "^0.2.13",
     "rpi-gpio": "^0.7.0",
+    "servoblaster": "^0.1.1",
     "socket.io": "^1.6.0",
     "socket.io-stream": "^0.9.1",
     "stream-split": "^1.1.0",

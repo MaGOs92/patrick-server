@@ -38,6 +38,15 @@ wss.on('connection', (ws: WebSocket, req) => {
                 servoController.setPwm(data.direction)
             }
         };
+
+        ws.onclose = () => {
+            servoController.calibrate();
+            escController.calibrate();
+        };
+
+        ws.onerror = (err) => {
+            console.log('Motors ws error : ', err);
+        };
     }
 
     // TODO : Heatbeat

@@ -22,7 +22,6 @@ export default class ServoController implements MotorManager {
 
     constructor(private ws: WebSocket) {
         console.log('Creating servo controller');
- 
         this.servoStream = servoblaster.createWriteStream(this.SERVO_PIN);
     }
 

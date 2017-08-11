@@ -1,17 +1,14 @@
 import * as Splitter from 'stream-split';
-import {
-  Server
-} from 'ws';
 import * as raspicam from 'raspicam';
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import * as util from 'util';
 
 const NALseparator = new Buffer([0, 0, 0, 1]);
 
 export default class StreamManager {
 
-  cameraStatus: CameraStatus = CameraStatus.iddle;
   readStream;
+  camera: ChildProcess;
 
   constructor(public ws, public options) {
     console.log('Creating stream manager');
@@ -35,14 +32,14 @@ export default class StreamManager {
     });
 
     this.ws.on('close', () => {
-      if (this.readStream) {
-        this.readStream.end();
+      if (this.camera) {
+        this.camera.kill();
       }
       console.log('stopping client interval');
     });
 
     this.ws.on('error', (err) => {
-      console.log(err);
+      console.log('Stream ws error : ', err);
     });
 
   }
@@ -66,15 +63,10 @@ export default class StreamManager {
     let msk = 'raspivid -t 0 -o - -w %d -h %d -fps %d';
     let cmd = util.format(msk, this.options.width, this.options.height, this.options.fps);
     console.log('Launching camera with : ' + cmd);
-    let streamer = spawn('raspivid', ['-t', '0', '-o', '-', '-w', this.options.width, '-h', this.options.height, '-fps', this.options.fps, '-pf', 'baseline']);
-    streamer.on('exit', (code) => {
-      console.log('Failure', code);
+    this.camera = spawn('raspivid', ['-t', '0', '-o', '-', '-w', this.options.width, '-h', this.options.height, '-fps', this.options.fps, '-pf', 'baseline']);
+    this.camera.on('exit', (code) => {
+      console.log('Camera process exited : ', code);
     });
-    return streamer.stdout;
+    return this.camera.stdout;
   }
-}
-
-enum CameraStatus {
-  iddle,
-  active
 }

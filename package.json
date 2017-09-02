@@ -4,7 +4,7 @@
   "description": "Embeded node js server on a model boat (the patrick).",
   "main": "lib/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc spec/src/* --outDir spec/lib && jasmine",
     "dev": "nodemon lib/main.js",
     "dev:compile": "tsc --watch",
     "compile": "tsc --noUnusedParameters --noUnusedLocals"
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.13",
+    "jasmine": "^2.8.0",
     "typescript": "^2.4.1"
   }
 }

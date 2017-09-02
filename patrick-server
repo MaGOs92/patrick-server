@@ -32,7 +32,7 @@ fi;
 pidFile="/var/run/patrick-server.pid"
 logFile="/var/run/patrick-server.log"
 
-command="nodemon"
+command="node"
 nodeApp="/usr/local/patrick-server/lib/main.js"
 foreverApp="forever"
 

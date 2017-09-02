@@ -45,7 +45,7 @@ export default class StreamManager {
   }
 
   start_feed() {
-    let readStream = this.get_feed();
+    let readStream = this.start_camera();
     this.readStream = readStream;
 
     readStream = readStream.pipe(new Splitter(NALseparator));
@@ -59,7 +59,10 @@ export default class StreamManager {
   }
 
 
-  get_feed() {
+  start_camera() {
+    if (this.camera) {
+      this.camera.kill();
+    }
     let msk = 'raspivid -t 0 -o - -w %d -h %d -fps %d';
     let cmd = util.format(msk, this.options.width, this.options.height, this.options.fps);
     console.log('Launching camera with : ' + cmd);

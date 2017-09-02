@@ -13,7 +13,11 @@ const wss = new WebSocketServer({
 let servoController: MotorController;
 let escController: MotorController;
 
-wss.on('connection', (ws: WebSocket, req) => {
+function heartbeat() {
+    this.isAlive = true;
+}
+
+wss.on('connection', (ws, req) => {
 
     if (req.url === '/stream') {
         const streamManager = new StreamManager(ws, {
@@ -48,7 +52,17 @@ wss.on('connection', (ws: WebSocket, req) => {
             console.log('Motors ws error : ', err);
         };
     }
-
-    // TODO : Heatbeat
-
+    ws.isAlive = true;
+    ws.on('pong', heartbeat);  
 });
+
+
+const heartbeatInterval = setInterval(function ping() {
+    wss.clients.forEach(function each(ws) {
+      if (ws.isAlive === false) {
+        return ws.terminate();
+      }
+      ws.isAlive = false;
+      ws.ping('', false, true);
+    });
+  }, 5000);

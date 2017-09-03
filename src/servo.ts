@@ -11,13 +11,13 @@ export default class ServoController implements MotorManager {
     curDirection: string = '0';
 
     directionToPwm = {
-        '-3': 90,
-        '-2': 110,
-        '-1': 130,
+        '-3': 210,
+        '-2': 190,
+        '-1': 170,
         '0': 150,
-        '1': 170,
-        '2': 190,
-        '3': 210
+        '1': 130,
+        '2': 110,
+        '3': 90
     };
 
     constructor(private ws: WebSocket) {

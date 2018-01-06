@@ -1,6 +1,6 @@
 import MotorManager from './motor';
 import * as servoblaster from 'servoblaster';
-import { writeFile, createWriteStream, WriteStream } from "fs";
+import { WriteStream } from "fs";
 
 export default class ServoController implements MotorManager {
 

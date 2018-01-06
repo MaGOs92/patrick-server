@@ -25,6 +25,7 @@ wss.on('connection', (ws, req) => {
             height: '480',
             fps: '12'
         });
+        streamManager.send_init();
     }
 
     if (req.url === '/motors') {
@@ -56,8 +57,8 @@ wss.on('connection', (ws, req) => {
     ws.on('pong', heartbeat);  
 });
 
-
-const heartbeatInterval = setInterval(function ping() {
+// Heartbeat interval
+setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
       if (ws.isAlive === false) {
         return ws.terminate();

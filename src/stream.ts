@@ -1,5 +1,4 @@
 import * as Splitter from 'stream-split';
-import * as raspicam from 'raspicam';
 import { spawn, ChildProcess } from 'child_process';
 import * as util from 'util';
 
@@ -12,15 +11,9 @@ export default class StreamManager {
 
   constructor(public ws, public options) {
     console.log('Creating stream manager');
-    this.ws.send(JSON.stringify({
-      action: 'init',
-      width: this.options.width,
-      height: this.options.height
-    }));
 
     this.ws.on('message', (data) => {
-      let cmd = '' + data,
-        action = data.split(' ')[0];
+      let action = data.split(' ')[0];
       console.log('Incomming action : ' + action);
 
       if (action === 'REQUESTSTREAM') {
@@ -42,6 +35,14 @@ export default class StreamManager {
       console.log('Stream ws error : ', err);
     });
 
+  }
+
+  send_init() {
+    this.ws.send(JSON.stringify({
+        action: "init",
+        width: this.options.width,
+        height: this.options.height
+      }));
   }
 
   start_feed() {

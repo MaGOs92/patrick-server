@@ -29,19 +29,16 @@ wss.on('connection', (ws, req) => {
     }
 
     if (req.url === '/motors') {
-        servoController = new ServoController(ws);
-        escController = new ESCController(ws);
+        servoController = new ServoController();
+        escController = new ESCController();
 
         servoController.calibrate();
         escController.calibrate();
 
         ws.onmessage = (msg: MessageEvent) => {
             const data = JSON.parse(msg.data);
-            if (data.motor === 'esc') {
-                escController.setPwm(data.speed)
-            } else if (data.motor === 'servo') {
-                servoController.setPwm(data.direction)
-            }
+            escController.setPwm(data.speed);
+            servoController.setPwm(data.direction);
         };
 
         ws.onclose = () => {

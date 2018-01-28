@@ -4,11 +4,11 @@ import { WriteStream } from "fs";
 
 export default class ESCController implements MotorManager {
     
-    ESC_PIN: number = 1;
+    ESC_PIN: number = 2;
     escStream: WriteStream;
     isWriting: boolean = false;
 
-    curSpeed: string = '0';
+    curSpeed: number = 150;
 
     speedToPwm = {
         '-1': 140,
@@ -18,7 +18,7 @@ export default class ESCController implements MotorManager {
         '3': 180
     };
 
-    constructor(private ws: WebSocket) {
+    constructor() {
         console.log('Creating esc controller');
         this.escStream = servoblaster.createWriteStream(this.ESC_PIN);
     }
@@ -26,30 +26,30 @@ export default class ESCController implements MotorManager {
     calibrate() {
         console.log('ESC : calibrate()');
         if (!this.isWriting) {
-            this.curSpeed = '0';
+            this.curSpeed = 150;
             this.isWriting = true;
-            this.escStream.write(150, () => {
-                this.isWriting = false;
+            this.escStream.write(this.curSpeed, () => {
+              this.isWriting = false;
             });
         } else {
             console.log('Error : stream is in use');
         }
     }
 
-    setPwm(speed: string) {
+    setPwm(speed: number) {
         console.log('setPwm()', speed);
         if (speed === this.curSpeed) {
             return;
         }
         if (!this.isWriting) {
             this.isWriting = true;
-            this.escStream.write(this.speedToPwm[speed], () => {
+            this.escStream.write(speed, () => {
                 this.isWriting = false;
                 this.curSpeed = speed;
-                this.ws.send(JSON.stringify({
-                    motor: 'esc',
-                    speed: this.curSpeed
-                }));
+                // this.ws.send(JSON.stringify({
+                //     motor: 'esc',
+                //     speed: this.curSpeed
+                // }));
             });
         }
     }
